@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "../node_modules/.bin/mocha-webpack --webpack-config webpack.config.js  --require episode-1/test/setup.js test/*.spec.js"
+    "test": "mocha-webpack --webpack-config webpack.config.js  --require test/setup.js test/*.spec.js",
+    "watch": "mocha-webpack --webpack-config webpack.config.js  --watch --watch-poll --require test/setup.js test/*.spec.js"
   },
   "keywords": [
     "githire"
@@ -26,16 +27,13 @@
     "vue": "^2.6.10"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.6.3",
-    "@babel/register": "^7.6.2",
     "@vue/test-utils": "^1.0.0-beta.29",
-    "ava": "^2.4.0",
-    "browser-env": "^3.2.6",
     "expect": "^24.9.0",
     "jsdom": "^15.2.1",
     "jsdom-global": "^3.0.2",
     "mocha": "^6.2.2",
     "mocha-webpack": "^2.0.0-beta.0",
+    "vue-loader": "^15.7.2",
     "vue-template-compiler": "^2.6.10",
     "vue-test-utils": "^1.0.0-beta.11",
     "webpack": "^4.41.2"
