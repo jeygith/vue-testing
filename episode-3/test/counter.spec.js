@@ -27,14 +27,26 @@ describe('Counter', () => {
 
     it('decrements the count when the decrement button is clicked', () => {
 
-        expect(wrapper.vm.count).toBe(0);
-
-        wrapper.find('.increment').trigger('click');
-        wrapper.find('.increment').trigger('click');
+        wrapper.setData({
+            count: 5
+        });
 
         wrapper.find('.decrement').trigger('click');
 
-        expect(wrapper.vm.count).toBe(1);
+        expect(wrapper.vm.count).toBe(4);
+
+    });
+
+    it('never goes below 0', () => {
+        expect(wrapper.vm.count).toBe(0);
+
+        expect(wrapper.find('.decrement').isVisible()).toBe(false);
+
+        wrapper.setData({count: 1});
+
+
+        // expect(wrapper.find('.decrement').isVisible()).toBe(true);
+
 
     });
 
