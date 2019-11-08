@@ -9,6 +9,16 @@ describe('CouponCode', () => {
 
     beforeEach(() => {
         wrapper = mount(CouponCode);
+
+        wrapper.setData({
+            coupons: [
+                {
+                    code: "50OFF",
+                    message: '50% Off!',
+                    discount: 50
+                }
+            ]
+        });
     });
 
     it('accepts a coupon code', () => {
@@ -28,20 +38,22 @@ describe('CouponCode', () => {
         });
 
     });
+
     it('validates a fake coupon code', (done) => {
+        Vue.config.errorHandler = done;
+
         enterCouponCode('NOTREAL');
 
         expect(wrapper.vm.valid).toBe(false);
 
         Vue.nextTick(() => {
             expect(wrapper.html()).toContain('Invalid Coupon Code');
-
             done();
         });
 
     });
 
-    it('broadcast the percentage discount when a valid coupon code id applied',()=>{
+    it('broadcast the percentage discount when a valid coupon code id applied', () => {
         enterCouponCode('50OFF');
 
         expect(wrapper.emitted().applied).toBeTruthy();
