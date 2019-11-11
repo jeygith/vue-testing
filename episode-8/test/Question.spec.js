@@ -2,14 +2,14 @@ import {mount} from '@vue/test-utils'
 import expect from 'expect';
 import Question from '../src/components/Question.vue';
 import Vue from 'vue';
+import axios from 'axios'
+import moxios from 'moxios'
 
 
 describe('Question', () => {
     let wrapper;
 
     beforeEach(() => {
-
-
         wrapper = mount(Question, {
             propsData: {
                 dataQuestion: {
@@ -17,14 +17,16 @@ describe('Question', () => {
                     body: 'The body'
                 }
             }
-        })
-        ;
+        });
+        moxios.install();
 
 
     });
 
-
-
+    afterEach(function () {
+        // import and pass your custom axios instance to this method
+        moxios.uninstall()
+    })
 
     it('presents the title and the body', () => {
         see('The title');
@@ -68,12 +70,27 @@ describe('Question', () => {
 
             click('#update');
 
+
+            moxios.stubRequest('/questions/1', {
+                status: 200,
+                response: {
+                    title: 'Changed title',
+                    body: 'Changed body'
+                }
+            });
+
+
             Vue.nextTick(() => {
 
                 see('Changed title');
                 see('Changed body');
 
-                done();
+                moxios.wait(() => {
+
+                    see('Your question has been updated.');
+
+                    done();
+                })
             })
         });
     });
