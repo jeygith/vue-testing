@@ -1,0 +1,45 @@
+{
+  "name": "vue-testing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha-webpack --webpack-config webpack.config.js  --require test/setup.js test/*.spec.js",
+    "watch": "mocha-webpack --webpack-config webpack.config.js  --watch --watch-poll --require test/setup.js test/*.spec.js"
+  },
+  "keywords": [
+    "githire"
+  ],
+  "author": "githire",
+  "license": "ISC",
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  },
+  "ava": {
+    "require": [
+      "@babel/register",
+      "./test/helpers/setup-browser-env.js"
+    ]
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "moment": "^2.24.0",
+    "sinon": "^7.5.0",
+    "vue": "^2.6.10"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "^1.0.0-beta.29",
+    "expect": "^24.9.0",
+    "jsdom": "^15.2.1",
+    "jsdom-global": "^3.0.2",
+    "mocha": "^6.2.2",
+    "mocha-webpack": "^2.0.0-beta.0",
+    "moxios": "^0.4.0",
+    "vue-loader": "^15.7.2",
+    "vue-template-compiler": "^2.6.10",
+    "vue-test-utils": "^1.0.0-beta.11",
+    "webpack": "^4.41.2"
+  }
+}
