@@ -36,34 +36,27 @@ describe('Question', () => {
         });
 
         Vue.nextTick(() => {
-            see('0 days');
-            see('0 hours');
-            see('0 minutes');
+            see('0 Days');
+            see('0 Hours');
+            see('0 Minutes');
             see('10 Seconds');
             done();
         });
 
     });
 
-    it('reduces the countdown every second', (done) => {
-        Vue.config.errorHandler = done;
-
+    it.only('reduces the countdown every second', async  () => {
         wrapper.setProps({
             until: moment().add(10, 'seconds')
         });
 
-        Vue.nextTick(() => {
-            see('10 Seconds');
+        await Vue.nextTick();
+        see('10 Seconds');
+        clock.tick(1000);
 
-            clock.tick(1000);
+        await Vue.nextTick();
+        see('9 Seconds');
 
-            wrapper.vm.$nextTick(() => {
-
-                see('9 Seconds');
-
-                done();
-            });
-        });
     });
 
     it('shows an expired message when the counter has completed', (done) => {
@@ -87,8 +80,30 @@ describe('Question', () => {
         });
 
     });
+    it('shows a custom expired message when the counter has completed', (done) => {
+        Vue.config.errorHandler = done;
 
-    it.only('broadcasts when the countdown is finished', (done) => {
+        wrapper.setProps({
+            until: moment().add(10, 'seconds'),
+            expiredText: 'Contest is over.'
+        });
+
+        Vue.nextTick(() => {
+            see('10 Seconds');
+
+            clock.tick(10000);
+
+            wrapper.vm.$nextTick(() => {
+
+                see('Contest is over.');
+
+                done();
+            });
+        });
+
+    });
+
+    it('broadcasts when the countdown is finished', (done) => {
         Vue.config.errorHandler = done;
 
         wrapper.setProps({
@@ -107,6 +122,32 @@ describe('Question', () => {
         });
     });
 
+    it('clears the interval once completed', (done) => {
+        Vue.config.errorHandler = done;
+
+        wrapper.setProps({
+            until: moment().add(10, 'seconds')
+        });
+
+
+        Vue.nextTick(() => {
+            clock.tick(10000);
+
+            wrapper.vm.$nextTick(() => {
+                expect(wrapper.vm.now.getSeconds()).toBe(10);
+
+                wrapper.vm.$nextTick(() => {
+                    clock.tick(5000);
+                    expect(wrapper.vm.now.getSeconds()).toBe(10);
+
+                    done();
+                });
+            });
+        });
+
+
+    });
+
 
     let see = (text, selector) => {
         let wrap = selector ? wrapper.find(selector) : wrapper;
@@ -122,6 +163,16 @@ describe('Question', () => {
 
     let click = selector => {
         wrapper.find(selector).trigger('click');
+    }
+
+    let assertOnNextTick = (callback, done) => {
+        wrapper.vm.$nextTick(() => {
+            try {
+                callback();
+            } catch (e) {
+                done(e);
+            }
+        })
     }
 });
 

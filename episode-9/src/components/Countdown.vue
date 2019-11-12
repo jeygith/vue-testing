@@ -9,8 +9,8 @@
             left...
 
         </div>
-        <div v-else>
-            Now Expired
+        <div v-else v-text="expiredText">
+
         </div>
     </div>
 </template>
@@ -19,7 +19,10 @@
     import moment from 'moment';
 
     export default {
-        props: ['until'],
+        props: {
+            until: null,
+            expiredText: {default: 'Now Expired'}
+        },
         data() {
             return {
                 now: new Date()
@@ -31,6 +34,11 @@
             },
             remaining() {
                 let remaining = moment.duration(Date.parse(this.until) - this.now);
+
+                if (remaining <= 0) {
+
+                    this.$emit('finished');
+                }
                 return {
                     total: remaining,
                     days: remaining.days(),
@@ -41,9 +49,11 @@
             }
         },
         created() {
-            setInterval(() => {
+            let interval = setInterval(() => {
                 this.now = new Date();
-            }, 1000)
+            }, 1000);
+
+            this.$on('finished', () => clearInterval(interval));
         }
     }
 </script>
